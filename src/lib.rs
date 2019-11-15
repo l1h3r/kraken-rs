@@ -1,7 +1,9 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+#![feature(box_syntax, slice_concat_trait)]
+
+#[macro_use]
+extern crate serde;
+
+pub mod client;
+pub mod consts;
+mod de;
+pub mod types;

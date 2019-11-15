@@ -4,6 +4,16 @@ version = "0.1.0"
 authors = ["l1h3r <devin.turner09@gmail.com>"]
 edition = "2018"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies.reqwest]
+features = ["json"]
+version = "0.10.0-alpha.2"
 
-[dependencies]
+[dependencies.serde]
+features = ["derive"]
+version = "1.0.102"
+
+[dependencies.serde_json]
+version = "1.0.41"
+
+[dependencies.tokio]
+version = "0.2.0-alpha.6"
