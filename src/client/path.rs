@@ -10,12 +10,11 @@ impl Path {
 
   #[inline(always)]
   pub fn as_str(&self) -> &str {
-    // format!("{}?{}", self.path, self.segments.into_iter().map(|segment| segment.join("=")).join("&"))
     &self.0
   }
 
   pub fn add<K: AsRef<str>, V: AsRef<str>>(&mut self, key: K, value: V) {
-    if self.0.contains("?") {
+    if self.0.contains('?') {
       self.0.push('&');
     } else {
       self.0.push('?');

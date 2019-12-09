@@ -7,8 +7,8 @@ use crate::types::Trade;
 #[repr(C)]
 #[serde(deny_unknown_fields)]
 pub struct Response<T> {
-  error: Vec<String>,
-  result: T,
+  pub error: Vec<String>,
+  pub result: T,
 }
 
 #[derive(Debug, Deserialize)]

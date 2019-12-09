@@ -1,4 +1,4 @@
-#![feature(box_syntax, slice_concat_trait)]
+#![feature(slice_concat_trait)]
 
 #[macro_use]
 extern crate serde;

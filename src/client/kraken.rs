@@ -33,7 +33,7 @@ impl Kraken {
   /// Get server time
   /// https://www.kraken.com/features/api#get-server-time
   pub async fn time(&self) -> Result<Response<Time>, BoxError> {
-    self.get("Time").await
+    self.get_public("Time").await
   }
 
   /// Get asset info
@@ -43,7 +43,7 @@ impl Kraken {
 
     path.add_slice("asset", filter);
 
-    self.get(path.as_str()).await
+    self.get_public(path.as_str()).await
   }
 
   /// Get tradable asset pairs
@@ -53,20 +53,23 @@ impl Kraken {
 
     path.add_slice("pair", filter);
 
-    self.get(path.as_str()).await
+    self.get_public(path.as_str()).await
   }
 
   /// Get ticker information
   /// https://www.kraken.com/features/api#get-ticker-info
   pub async fn ticker(&self, filter: &[&str]) -> Result<Response<Map<TickerPair>>, BoxError> {
     // TODO: Proper error
-    assert!(!filter.is_empty(), "Invalid Filter. You must request at least one pair.");
+    assert!(
+      !filter.is_empty(),
+      "Invalid Filter. You must request at least one pair."
+    );
 
     let mut path: Path = Path::new("Ticker");
 
     path.add_slice("pair", filter);
 
-    self.get(path.as_str()).await
+    self.get_public(path.as_str()).await
   }
 
   /// Get OHLC data
@@ -86,7 +89,7 @@ impl Kraken {
       path.add("since", since.to_string());
     }
 
-    self.get(path.as_str()).await
+    self.get_public(path.as_str()).await
   }
 
   /// Get order book
@@ -104,7 +107,7 @@ impl Kraken {
       path.add("count", count.to_string());
     }
 
-    self.get(path.as_str()).await
+    self.get_public(path.as_str()).await
   }
 
   /// Get recent trades
@@ -122,7 +125,7 @@ impl Kraken {
       path.add("since", since.to_string());
     }
 
-    self.get(path.as_str()).await
+    self.get_public(path.as_str()).await
   }
 
   /// Get recent spread data
@@ -140,11 +143,19 @@ impl Kraken {
       path.add("since", since.to_string());
     }
 
-    self.get(path.as_str()).await
+    self.get_public(path.as_str()).await
   }
 
-  async fn get<T: DeserializeOwned>(&self, path: &str) -> Result<Response<T>, BoxError> {
-    Ok(self.client.get(&pub_url(path)).send().await?.json().await?)
+  async fn get_public<T: DeserializeOwned>(&self, path: &str) -> Result<Response<T>, BoxError> {
+    Ok(self.get(&pub_url(path)).await?)
+  }
+
+  async fn get_private<T: DeserializeOwned>(&self, path: &str) -> Result<Response<T>, BoxError> {
+    Ok(self.get(&prv_url(path)).await?)
+  }
+
+  async fn get<T: DeserializeOwned>(&self, url: &str) -> Result<Response<T>, BoxError> {
+    Ok(self.client.get(url).send().await?.json().await?)
   }
 }
 
